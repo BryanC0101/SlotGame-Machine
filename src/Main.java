@@ -1,26 +1,72 @@
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.Random;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.*;
 
 public class Main {
 
+    /* vou fazer um arquivo contendo os items das roleta com suas probabilidades, depois,
+    vou mandar isso para a betList e ela vai escolher entre os 100 ou seja quantos items forem
+    no .txt. Isso vai criar uma espécie de probabilidade maior do que está agora
+    mais parecido com as usadas em caça níqueis reais. */
+
     static double bet(double betAmount, Player player){
-        Random rand = new Random();
-        String[] bets = {"🍇", "🍉", "🔔", "⭐", "7"};
-        ArrayList<String> betList = new ArrayList<>();
 
-        int indexLuck = 0;
+        //if fruta pega no random == map.get()
 
-        for(int i = 0; i < 3; i++){
-            betList.add(bets[rand.nextInt(bets.length)]);
+
+        // onde pega a string do txt, pegar essa string e comparar com cada um dos
+        // que estão no map. Dessa forma pegando o número representado por cada um
+
+//        String[] ordemFrutas = {"🍒", "🍋", "🍇", "🍉", "🔔", "➖", "⭐", "7️"};
+        ArrayList<String> items = new ArrayList<>();
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("🍒", 0);
+        map.put("🍋", 1);
+        map.put("🍇", 2);
+        map.put("🍉", 3);
+        map.put("🔔", 4);
+        map.put("➖", 5);
+        map.put("⭐", 6);
+        map.put("7", 7);
+
+        String filePath = "items.txt";
+
+        try(BufferedReader reader = new  BufferedReader(new FileReader(filePath))){
+            String line;
+            while((line = reader.readLine()) != null){
+                items.add(line);
+            }
+        }
+        catch (FileNotFoundException e){
+            System.out.println("Arquivo não encontrado!");
+        }
+        catch (IOException e){
+            System.out.println("Alguma coisa deu errado!");
         }
 
-        //Mostrar emojis
+        Random rand = new Random();
+
+        ArrayList<String> betList = new ArrayList<>();
+
+        int indexLuck = -1;
+
+        ArrayList<Integer> indexItemsEmojis = new ArrayList<>();
+
+        //Abaixo mandar o emoji random para o array betList
+        for(int i = 0; i < 3; i++){
+            String randomEmoji = items.get(rand.nextInt(items.size()));
+            betList.add(randomEmoji);
+
+            int indexEmoji = map.get(randomEmoji);
+            indexItemsEmojis.add(indexEmoji);
+        }
+
         System.out.println();
-        for(String i : betList){
-            System.out.print(" | ");
-            System.out.print(i);
+        //Mostrar emojis
+        for(String emoji : betList){
+            System.out.print(" | " + emoji);
         }
         System.out.print(" | \n");
         System.out.println();
@@ -31,38 +77,51 @@ public class Main {
 
             String winner3Items = betList.getFirst();
 
-            for(int i = 0; i < bets.length; i++){
-                if(bets[i].equals(winner3Items)){
-                    indexLuck = i;
-                    break;
-                }
-            }
+            indexLuck = map.getOrDefault(winner3Items, -1);
 
             switch (indexLuck){
-                case 0 -> {
+                case 0 -> { // 🍒
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 2;
                 }
-                case 1 -> {
+                case 1 -> { // 🍋
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 3;
                 }
-                case 2 -> {
+                case 2 -> { // 🍇
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 5;
                 }
-                case 3 -> {
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 10) - betAmount));
+                case 3 -> { // 🍉
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 8) - betAmount));
                     player.adicionarVitorias();
-                    return betAmount * 10;
+                    return betAmount * 8;
                 }
-                case 4 -> {
+                case 4 -> { // 🔔
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 12) - betAmount));
+                    player.adicionarVitorias();
+                    return betAmount * 12;
+                }
+                case 5 -> { // ➖
+                    System.out.println("Você ganhou um grande prêmio!!");
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 20) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 20;
+                }
+                case 6 -> { // ⭐
+                    System.out.println("!!!SORTE-SORTE-SORTE!!!");
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 50) - betAmount));
+                    player.adicionarVitorias();
+                    return betAmount * 50;
+                }
+                case 7 -> { // 7
+                    System.out.println("!!!!Você ganhou o prêmio máximo!!!!");
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 100) - betAmount));
+                    player.adicionarVitorias();
+                    return betAmount * 100;
                 }
             }
         }
@@ -84,39 +143,51 @@ public class Main {
                 winner2Items = betList.get(1);
             }
 
-            for(int i = 0; i < bets.length; i++){
-                if(bets[i].equals(winner2Items)){
-                    indexLuck = i;
-                    break;
-                }
-            }
+            indexLuck = map.getOrDefault(winner2Items, -1);
 
             switch (indexLuck){
 
-                case 0 -> {
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.25) - betAmount));
+                case 0 -> { // 🍒
+                    System.out.println("Aposta ressarcida!");
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1) - betAmount));
                     player.adicionarVitorias();
-                    return betAmount * 1.25;
+                    return betAmount * 1;
                 }
-                case 1 -> {
+                case 1 -> { // 🍋
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.50) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 1.50;
                 }
-                case 2 -> {
+                case 2 -> { // 🍇
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 2;
                 }
-                case 3 -> {
+                case 3 -> { // 🍉
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 3;
                 }
-                case 4 -> {
+                case 4 -> { // 🔔
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
                     player.adicionarVitorias();
                     return betAmount * 5;
+                }
+                case 5 -> { // ➖
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 8) - betAmount));
+                    player.adicionarVitorias();
+                    return betAmount * 8;
+                }
+                case 6 -> { // ⭐
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 15) - betAmount));
+                    player.adicionarVitorias();
+                    return betAmount * 15;
+                }
+                case 7 -> { // 7
+                    System.out.println("Você ganhou um bom prêmio!!");
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 25) - betAmount));
+                    player.adicionarVitorias();
+                    return betAmount * 25;
                 }
             }
         }
