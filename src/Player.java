@@ -32,4 +32,13 @@ public class Player {
     public void setDerrotas(int derrotas) {
         this.derrotas = derrotas;
     }
+
+    public void adicionarVitorias(){
+        this.vitorias++;
+    }
+
+    public void adicionarDerrotas(){
+        this.derrotas++;
+    }
+
 }
