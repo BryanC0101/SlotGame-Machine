@@ -5,11 +5,31 @@ import java.io.IOException;
 import java.util.*;
 
 public class Main {
-
+    static String RESET = "\u001B[0m";
+    static String DOURADO = "\u001B[33m";
+    static String NEGRITO = "\u001B[1m";
+    static String VERDE = "\u001B[32m";
+    static String AZUL = "\u001B[34m";
+    static String ROXO = "\u001B[35m";
+    static String VERMELHO = "\u001B[31m";
+    static String CIANO = "\u001B[36m";
     /* vou fazer um arquivo contendo os items das roleta com suas probabilidades, depois,
     vou mandar isso para a betList e ela vai escolher entre os 100 ou seja quantos items forem
     no .txt. Isso vai criar uma espécie de probabilidade maior do que está agora
     mais parecido com as usadas em caça níqueis reais. */
+
+
+    /*
+    Possíveis artifícios para comprar na loja:
+    1. invencível por 1 rodada (não perde nada caso não ganhe)
+    2. ganha 10% a mais por 3 rodadas
+     */
+
+    /*
+    Caso o usuário chegue a 0 de dinheiro, um agiota vai vir perguntar se ele quer mais dinheiro.
+    Caso ele queira (uma quantia de até R$100)
+     */
+
 
     static double bet(double betAmount, Player player){
 
@@ -29,7 +49,7 @@ public class Main {
         try(BufferedReader reader = new  BufferedReader(new FileReader(filePath))){
             String line;
             while((line = reader.readLine()) != null){
-                items.add(line);
+                items.add(line.trim());
             }
         }
         catch (FileNotFoundException e){
@@ -42,9 +62,7 @@ public class Main {
         Random rand = new Random();
 
         ArrayList<String> betList = new ArrayList<>();
-
         int indexLuck = -1;
-
         ArrayList<Integer> indexItemsEmojis = new ArrayList<>();
 
         //Abaixo mandar o emoji random para o array betList
@@ -56,13 +74,27 @@ public class Main {
             indexItemsEmojis.add(indexEmoji);
         }
 
-        System.out.println();
-        //Mostrar emojis
+        System.out.println("GIRANDO!!!");
+        System.out.println("Boa Sorte!");
+
+        for(int rodada = 0; rodada < 15; rodada++){
+            String temp1 = items.get(rand.nextInt(items.size()));
+            String temp2 = items.get(rand.nextInt(items.size()));
+            String temp3 = items.get(rand.nextInt(items.size()));
+            System.out.print("\r [" + temp1 + " | " + temp2 + " | " + temp3 + "]");
+
+            try {
+                Thread.sleep(150);
+            }
+            catch (InterruptedException e){
+                Thread.currentThread().interrupt();
+            }
+        }
+        System.out.println("\rRESULTADO FINAL:");
         for(String emoji : betList){
             System.out.print(" | " + emoji);
         }
-        System.out.print(" | \n");
-        System.out.println();
+        System.out.print(" | \n\n");
 
         // Caso acerte 3 items
         if(betList.get(0).equals(betList.get(1)) &&
@@ -74,45 +106,45 @@ public class Main {
 
             switch (indexLuck){
                 case 0 -> { // 🍒
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 2;
                 }
                 case 1 -> { // 🍋
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 3;
                 }
                 case 2 -> { // 🍇
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 5;
                 }
                 case 3 -> { // 🍉
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 8) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 8) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 8;
                 }
                 case 4 -> { // 🔔
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 12) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 12) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 12;
                 }
                 case 5 -> { // ➖
-                    System.out.println("Você ganhou um grande prêmio!!");
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 20) - betAmount));
+                    System.out.println(ROXO + "Você ganhou um grande prêmio!!" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 20) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 20;
                 }
                 case 6 -> { // ⭐
-                    System.out.println("!!!SORTE-SORTE-SORTE!!!");
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 50) - betAmount));
+                    System.out.println(AZUL + "!!!SORTE-SORTE-SORTE!!!" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 50) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 50;
                 }
                 case 7 -> { // 7
-                    System.out.println("!!!!Você ganhou o prêmio máximo!!!!");
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 100) - betAmount));
+                    System.out.println(DOURADO + "!!!!Você ganhou o prêmio máximo!!!!" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 100) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 100;
                 }
@@ -141,50 +173,52 @@ public class Main {
             switch (indexLuck){
 
                 case 0 -> { // 🍒
-                    System.out.println("Aposta ressarcida!");
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1) - betAmount));
+                    System.out.println(CIANO + "Aposta ressarcida!" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 1) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 1;
                 }
                 case 1 -> { // 🍋
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.50) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 1.50) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 1.50;
                 }
                 case 2 -> { // 🍇
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 2;
                 }
                 case 3 -> { // 🍉
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 3;
                 }
                 case 4 -> { // 🔔
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 5;
                 }
                 case 5 -> { // ➖
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 8) - betAmount));
+                    System.out.println(VERDE + "SORTE" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 8) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 8;
                 }
                 case 6 -> { // ⭐
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 15) - betAmount));
+                    System.out.println(CIANO + "!!SORTE-SORTE!!" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 15) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 15;
                 }
                 case 7 -> { // 7
-                    System.out.println("Você ganhou um bom prêmio!!");
-                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 25) - betAmount));
+                    System.out.println(DOURADO + "Você ganhou um bom prêmio!!" + RESET);
+                    System.out.println(VERDE + "Parabéns, você ganhou R$" + ((betAmount * 25) - betAmount) + RESET);
                     player.adicionarVitorias();
                     return betAmount * 25;
                 }
             }
         }
-        System.out.println("Que pena, você perdeu R$" + betAmount);
+        System.out.println(VERMELHO + "Que pena, você perdeu R$" + betAmount + RESET);
         player.adicionarDerrotas();
         return 0;
 
@@ -195,15 +229,17 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         Player player = new Player(100.00, 0, 0);
 
-        System.out.println("********************************");
-        System.out.println("      Bem vindo ao Cassino");
-        System.out.println("********************************");
+
+        System.out.println(DOURADO + "♦ ♣  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ♠ ♥" + RESET);
+        System.out.println(NEGRITO + "               BEM-VINDO AO CASSINO                " + RESET);
+        System.out.println(VERDE + "          [ Insira sua aposta e gire! ]            " + RESET);
+        System.out.println(DOURADO + "♦ ♣  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  ♠ ♥\n" + RESET);
 
         int response = 1;
 
         while (response >= 1 && response < 4) {
-            System.out.println("Seu saldo atual é: R$" + player.getSaldo() + "\n");
-            System.out.println("O que deseja fazer? ");
+            System.out.println(AZUL + "Seu saldo atual é: R$" + player.getSaldo() + "\n" + RESET);
+            System.out.println(VERDE + "O que deseja fazer? " + RESET);
             System.out.println("""
                 1. Girar
                 2. Estatísticas
@@ -262,13 +298,14 @@ public class Main {
                     }
                 }
                 case 2 -> {
-                    System.out.println("Histórico: ");
-                    System.out.println("Vitórias: " + player.getVitorias());
-                    System.out.println("Derrotas: " + player.getDerrotas());
+                    System.out.println("\n" + ROXO + "━━━━━━━━━ HISTÓRICO JOGADOR ━━━━━━━━━" + RESET);
+                    System.out.println("  " + VERDE + "Vitórias: " + RESET + player.getVitorias());
+                    System.out.println("  " + VERMELHO + "Derrotas: " + RESET + player.getDerrotas());
+                    System.out.println(ROXO + "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" + RESET);
                 }
                 case 3 -> System.out.println("Loja para abrir");
                 case 4 -> {
-                    System.out.println("Seu saldo final foi de: R$" + player.getSaldo());
+                    System.out.println(AZUL + "Seu saldo final foi de: R$" + player.getSaldo() + RESET);
                     System.out.println("Volte sempre!");
                 }
             }
