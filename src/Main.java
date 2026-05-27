@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    static double bet(double betAmount){
+    static double bet(double betAmount, Player player){
 
         // if todos são iguais e a soma é 0, 3, 6, 9, 12 (soma dos index das iguais frutas), ganha um premio maior
 
@@ -67,22 +67,27 @@ public class Main {
             switch (indexLuck){
                 case 0 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 2;
                 }
                 case 1 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 3;
                 }
                 case 2 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 5;
                 }
                 case 3 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 10) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 10;
                 }
                 case 4 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 20) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 20;
                 }
             }
@@ -113,24 +118,30 @@ public class Main {
             }
 
             switch (indexLuck){
+
                 case 0 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.25) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 1.25;
                 }
                 case 1 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.50) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 1.50;
                 }
                 case 2 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 2;
                 }
                 case 3 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 3;
                 }
                 case 4 -> {
                     System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
+                    player.setVitorias(player.getVitorias() + 1);
                     return betAmount * 5;
                 }
             }
@@ -138,6 +149,7 @@ public class Main {
         }
 
         System.out.println("Que pena, você perdeu R$" + betAmount);
+        player.setDerrotas(player.getDerrotas() + 1);
         return 0;
 
     }
@@ -145,8 +157,9 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        Player player = new Player(100.00, 0, 0);
 
-        double saldoAtual = 100.00;
+        double saldoAtual = player.getSaldo();
 
         System.out.println("********************************");
         System.out.println("      Bem vindo ao Cassino");
@@ -155,12 +168,12 @@ public class Main {
         int response = 1;
 
         while (response >= 1 && response < 4) {
-            System.out.println("Seu saldo atual é: R$" + saldoAtual + "\n");
+            System.out.println("Seu saldo atual é: R$" + player.getSaldo() + "\n");
             System.out.println("O que deseja fazer? ");
             System.out.println("""
                 1. Girar
-                2. Loja
-                3. Estatísticas
+                2. Estatísticas
+                3. Loja
                 4. Sair
                 """);
             System.out.print("Digite sua resposta: ");
@@ -183,28 +196,32 @@ public class Main {
 
             switch (response){
                 case 1 -> {
-                    if (saldoAtual <= 0){
+                    if (player.getSaldo() <= 0){
                         System.out.println("Você não possui fundos para esta ação!");
                     }else {
                         System.out.println("Quantos deseja apostar? ");
                         int responseBet = scanner.nextInt();
-                        if ((saldoAtual - responseBet) >= 0){
+                        if ((player.getSaldo() - responseBet) >= 0){
                             betAmount = responseBet;
 
-                            saldoAtual -= betAmount;
+                            player.setSaldo(player.getSaldo() - betAmount);
 
-                            double resultado = bet(betAmount);
+                            double resultado = bet(betAmount, player);
 
-                            saldoAtual += resultado;
+                            player.setSaldo(player.getSaldo() + resultado);
                         }else {
                             System.out.println("Sua aposta é mais alta que seu saldo, tente novamente!");
                         }
                     }
                 }
-                case 2 -> System.out.println("Loja abriu (vou fazer depois)");
+                case 2 -> {
+                    System.out.println("Histórico: ");
+                    System.out.println("Vitórias: " + player.getVitorias());
+                    System.out.println("Derrotas: " + player.getDerrotas());
+                }
                 case 3 -> System.out.println("Estatísticas, as senhoras");
                 case 4 -> {
-                    System.out.println("Seu saldo final foi de: R$" + saldoAtual);
+                    System.out.println("Seu saldo final foi de: R$" + player.getSaldo());
                     System.out.println("Volte sempre!");
                 }
             }
