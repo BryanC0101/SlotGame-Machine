@@ -13,13 +13,6 @@ public class Main {
 
     static double bet(double betAmount, Player player){
 
-        //if fruta pega no random == map.get()
-
-
-        // onde pega a string do txt, pegar essa string e comparar com cada um dos
-        // que estão no map. Dessa forma pegando o número representado por cada um
-
-//        String[] ordemFrutas = {"🍒", "🍋", "🍇", "🍉", "🔔", "➖", "⭐", "7️"};
         ArrayList<String> items = new ArrayList<>();
         HashMap<String, Integer> map = new HashMap<>();
         map.put("🍒", 0);
