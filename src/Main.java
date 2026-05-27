@@ -66,23 +66,23 @@ public class Main {
 
             switch (indexLuck){
                 case 0 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 2);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
                     return betAmount * 2;
                 }
                 case 1 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 3);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
                     return betAmount * 3;
                 }
                 case 2 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 5);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
                     return betAmount * 5;
                 }
                 case 3 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 10);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 10) - betAmount));
                     return betAmount * 10;
                 }
                 case 4 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 20);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 20) - betAmount));
                     return betAmount * 20;
                 }
             }
@@ -114,30 +114,30 @@ public class Main {
 
             switch (indexLuck){
                 case 0 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 1.25);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.25) - betAmount));
                     return betAmount * 1.25;
                 }
                 case 1 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 1.50);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 1.50) - betAmount));
                     return betAmount * 1.50;
                 }
                 case 2 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 2);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 2) - betAmount));
                     return betAmount * 2;
                 }
                 case 3 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 3);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 3) - betAmount));
                     return betAmount * 3;
                 }
                 case 4 -> {
-                    System.out.println("Parabéns, você ganhou " + betAmount * 5);
+                    System.out.println("Parabéns, você ganhou R$" + ((betAmount * 5) - betAmount));
                     return betAmount * 5;
                 }
             }
 
         }
 
-        System.out.println("Que pena, você perdeu " + betAmount);
+        System.out.println("Que pena, você perdeu R$" + betAmount);
         return 0;
 
     }
@@ -146,15 +146,16 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-
-        Double saldoAtual;
-//
+        double saldoAtual = 100.00;
 
         System.out.println("********************************");
-        System.out.println("Bem vindo ao Cassino do Bicheiro");
+        System.out.println("      Bem vindo ao Cassino");
         System.out.println("********************************");
 
-        while (true) {
+        int response = 1;
+
+        while (response >= 1 && response < 4) {
+            System.out.println("Seu saldo atual é: R$" + saldoAtual + "\n");
             System.out.println("O que deseja fazer? ");
             System.out.println("""
                 1. Girar
@@ -163,21 +164,49 @@ public class Main {
                 4. Sair
                 """);
             System.out.print("Digite sua resposta: ");
-            int response = 0;
-            double betAmount = 100;
 
-            try{
-                response = scanner.nextInt();
+            double betAmount;
+
+            boolean valid = false;
+
+            while(!valid){
+                try{
+                    response = scanner.nextInt();
+                    valid = true;
+                }
+                catch(InputMismatchException e){
+                    System.out.println("Digite um valor válido!");
+                    scanner.nextLine();
+                }
             }
-            catch(InputMismatchException e){
-                System.out.println("Digite um valor válido!");
-            }
+
 
             switch (response){
-                case 1 -> System.out.println(bet(betAmount));
+                case 1 -> {
+                    if (saldoAtual <= 0){
+                        System.out.println("Você não possui fundos para esta ação!");
+                    }else {
+                        System.out.println("Quantos deseja apostar? ");
+                        int responseBet = scanner.nextInt();
+                        if ((saldoAtual - responseBet) >= 0){
+                            betAmount = responseBet;
+
+                            saldoAtual -= betAmount;
+
+                            double resultado = bet(betAmount);
+
+                            saldoAtual += resultado;
+                        }else {
+                            System.out.println("Sua aposta é mais alta que seu saldo, tente novamente!");
+                        }
+                    }
+                }
                 case 2 -> System.out.println("Loja abriu (vou fazer depois)");
                 case 3 -> System.out.println("Estatísticas, as senhoras");
-                case 4 -> System.out.println("Até logo!");
+                case 4 -> {
+                    System.out.println("Seu saldo final foi de: R$" + saldoAtual);
+                    System.out.println("Volte sempre!");
+                }
             }
 
         }
